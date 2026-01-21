@@ -1,0 +1,63 @@
+name: Update Integration Size
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        required: true
+        type: string
+        description: "Port run ID for logging"
+      org_id:
+        required: true
+        type: string
+        description: "Organization ID"
+      installation_id:
+        required: true
+        type: string
+        description: "Integration installation ID"
+      size:
+        required: true
+        type: string
+        description: "Target size (S, M, L, XL)"
+      region:
+        required: true
+        type: string
+        description: "AWS region"
+
+jobs:
+  update_integration_size:
+    env:
+      RUN_ID: ${{ inputs.run_id }}
+      ORG_ID: ${{ inputs.org_id }}
+      INSTALLATION_ID: ${{ inputs.installation_id }}
+      SIZE: ${{ inputs.size }}
+      ENVIRONMENT: staging
+      INTERNAL_DOMAIN: stg-01-internal.getport.io
+      MAIN_ACCOUNT_API_URL: https://api.stg-01.getport.io/v1
+      # ENVIRONMENT: production
+      # MAIN_ACCOUNT_API_URL: https://api.${{ inputs.region == 'us-east-1' && 'us.' || '' }}getport.io/v1
+      # INTERNAL_DOMAIN: production-internal.${{ inputs.region == 'us-east-1' && 'us.' || '' }}getport.io
+      PORT_CLIENT_ID: ${{ secrets.MAIN_ACCOUNT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.MAIN_ACCOUNT_CLIENT_SECRET }}
+    runs-on: ubuntu-slim
+    # runs-on: production-${{ inputs.region }}-runners-amd64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      # - name: Set up Python 🐍
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.11.10'
+      #     cache: 'pip'
+
+      # - name: Install Python requirements 🗒️
+      #   run: |
+      #     # pip install -e packages/port-ssa-common
+      #     pip install -r actions/update_integration_size/requirements.txt
+
+      - name: Run update integration size script 🚀
+        # working-directory: actions/update_integration_size
+        run: |
+          echo 'Hello world!'
